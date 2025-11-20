@@ -9,11 +9,12 @@ return {
                     typescript = { "prettier" },
                     javascriptreact = { "prettier" },
                     typescriptreact = { "prettier" },
+                    java = { "google-java-format" },
                 },
             })
-            vim.keymap.set("n", "<leader>f", function()
-                require("conform").format({})
-            end)
+            vim.keymap.set("n", "<leader>ff", function()
+                require("conform").format()
+            end, { desc = "format file" })
         end,
     },
 }

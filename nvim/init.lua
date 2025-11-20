@@ -27,6 +27,7 @@ vim.list_extend(plugins, require("plugins.conform"))
 vim.list_extend(plugins, require("plugins.autocomplete"))
 vim.list_extend(plugins, require("plugins.neoscroll"))
 vim.list_extend(plugins, require("plugins.lualine"))
+vim.list_extend(plugins, require("plugins.render-markdown"))
 
 require("lazy").setup(plugins, {})
 
