@@ -8,7 +8,7 @@ return {
             vim.keymap.set('n', '<C-p>', builtin.find_files, {desc = "find files in dir"})
             vim.keymap.set('n', '<leader>fg', builtin.live_grep, {desc = "find/grep"})
             vim.keymap.set('n', '<leader>ds', builtin.lsp_document_symbols, {desc = "document symbols"})
-            vim.keymap.set('n', '<leader>ws', builtin.lsp_workspace_symbols, {desc = "workspace symbols"})
+            vim.keymap.set('n', '<leader>ws', builtin.lsp_dynamic_workspace_symbols, {desc = "workspace symbols"})
             vim.keymap.set('n', '<leader>qr', builtin.keymaps, {desc = "quick ref"})
             vim.keymap.set('n', '<leader>ser', builtin.diagnostics, {desc = "see error"})
         end,

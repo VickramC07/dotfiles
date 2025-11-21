@@ -11,6 +11,11 @@ return {
                     typescriptreact = { "prettier" },
                     java = { "google-java-format" },
                 },
+                formatters = {
+                    ["google-java-format"] = {
+                        prepend_args = { "--aosp" },
+                    },
+                },
             })
             vim.keymap.set("n", "<leader>ff", function()
                 require("conform").format()
