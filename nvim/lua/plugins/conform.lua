@@ -10,6 +10,7 @@ return {
                     javascriptreact = { "prettier" },
                     typescriptreact = { "prettier" },
                     java = { "google-java-format" },
+                    lua = { "stylua" },
                 },
                 formatters = {
                     ["google-java-format"] = {

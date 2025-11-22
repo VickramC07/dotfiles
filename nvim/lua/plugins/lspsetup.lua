@@ -59,6 +59,7 @@ start_server("cssls", { "vscode-css-language-server", "--stdio" })
 start_server("jdtls", { "jdtls" })
 
 -- Lua
+start_server("lua_ls", { "lua-language-server" })
 vim.lsp.config("lua_ls", {
     settings = {
         Lua = {

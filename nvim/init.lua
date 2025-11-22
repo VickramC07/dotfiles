@@ -29,6 +29,7 @@ vim.list_extend(plugins, require("plugins.neoscroll"))
 vim.list_extend(plugins, require("plugins.lualine"))
 vim.list_extend(plugins, require("plugins.render-markdown"))
 vim.list_extend(plugins, require("plugins.toggleterm"))
+vim.list_extend(plugins, require("plugins.oil"))
 
 require("lazy").setup(plugins, {})
 
