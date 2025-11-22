@@ -58,3 +58,12 @@ start_server("cssls", { "vscode-css-language-server", "--stdio" })
 -- Java
 start_server("jdtls", { "jdtls" })
 
+-- Lua
+vim.lsp.config("lua_ls", {
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { "vim" },
+                locals = { "client", "bufopts" },
+            }}}
+})

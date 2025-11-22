@@ -26,8 +26,35 @@ return {
                 lazygit:toggle()
             end
 
-            -- Keymap: <leader>fg
-            vim.keymap.set("n", "<leader>lg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", { desc = "Lazy Git" })
+            local blank = Terminal:new({
+                hidden = true,
+                direction = "float",
+                float_opts = {
+                    border = "rounded",
+                },
+            })
+
+            function _BLANK_TOGGLE()
+                blank:toggle()
+            end
+
+            local yazi = Terminal:new({
+                cmd = "yazi",
+                hidden = true,
+                direction = "float",
+                float_opts = {
+                    border = "rounded",
+                },
+            })
+
+            function _YAZI_TOGGLE()
+                yazi:toggle()
+            end
+
+            -- Keymap: <leader>t(whatever it opens)
+            vim.keymap.set("n", "<leader>tl", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", { desc = "toggle/terminal: lazygit" })
+            vim.keymap.set("n", "<leader>tb", "<cmd>lua _BLANK_TOGGLE()<CR>", { desc = "toggle/terminal: blank(cwd)" })
+            vim.keymap.set("n", "<leader>ty", "<cmd>lua _YAZI_TOGGLE()<CR>", { desc = "toggle/terminal: YAZI" })
         end,
     },
 }
