@@ -72,17 +72,27 @@ sketchybar --add event aerospace_workspace_change
 # Simple numeric labels for workspaces
 SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "0")
 
+source "$ITEM_DIR/aerospace.sh"
+
 for sid in $(aerospace list-workspaces --monitor focused --empty no); do
   # Determine icon based on workspace ID
   space_icon=""
   case "$sid" in
-  1) space_icon="💻" ;;
-  2) space_icon="🌐" ;;
-  3) space_icon=":D" ;;
+  1) space_icon="󰗀" ;;
+  2) space_icon="󰖟" ;;
+  3) space_icon="󰋋" ;;
+  4) space_icon="󰎲" ;;
+  5) space_icon="󰼓" ;;
+  6) space_icon="󰎴" ;;
+  7) space_icon="󰼕" ;;
+  8) space_icon="󰎺" ;;
+  9) space_icon="󰼗" ;;
+  0) space_icon="󰗘" ;;
   *) space_icon="" ;;
   esac
 
-  sketchybar --add item space.$sid left \
+  sketchybar --animate linear 20 \
+      --add item space.$sid left \
     --subscribe space.$sid aerospace_workspace_change \
     --set space.$sid \
     background.color=$TRANSPARENT \
@@ -101,8 +111,6 @@ for sid in $(aerospace list-workspaces --monitor focused --empty no); do
     click_script="aerospace workspace $sid" \
     script="$CONFIG_DIR/plugins/aerospace.sh $sid"
 done
-
-source "$ITEM_DIR/aerospace.sh"
 
 # Center
 
