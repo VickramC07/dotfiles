@@ -12,10 +12,6 @@ if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
         background.color=$ACCENT_TRANSPARENT \
         icon.color=$ACCENT \
         label.color=$ACCENT
-else
-  sketchybar --set $NAME background.drawing=off \
-    icon.color=$GREY \
-    label.color=$GREY
 fi
 
 # Update app icons for this workspace
@@ -37,4 +33,11 @@ if [ -n "$icon_string" ]; then
       --set $NAME label="$icon_string" label.drawing=on
 else
   sketchybar --set $NAME label.drawing=off
+fi
+
+if [ "$1" != "$FOCUSED_WORKSPACE" ]; then
+    sketchybar --animate linear 13 \
+    --set $NAME background.drawing=off \
+        icon.color=$GREY \
+        label.color=$GREY
 fi
