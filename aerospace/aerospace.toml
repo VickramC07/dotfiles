@@ -8,7 +8,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
     'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 on-focus-changed = [
-"exec-and-forget /bin/bash -lc '~/.config/sketchybar/plugins/aeroicon.sh'"
+    "exec-and-forget /bin/bash -lc '~/.config/sketchybar/plugins/aeroicon.sh'"
 ]
 
 # Start AeroSpace at login
@@ -172,5 +172,9 @@ if.window-title-regex-substring = 'Picture-in-Picture'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-id = 'Recognize Text'
+if.app-id = 'com.parallels.toolbox.RecognizeText'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'net.java.openjdk.java'
 run = 'layout floating'
