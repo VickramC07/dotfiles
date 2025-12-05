@@ -8,23 +8,16 @@ return {
             "hrsh7th/cmp-cmdline",
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
-            "rafamadriz/friendly-snippets", -- ES7/React snippets
+            "rafamadriz/friendly-snippets",
+            "onsails/lspkind.nvim",
         },
         config = function()
             local cmp = require("cmp")
             local luasnip = require("luasnip")
             local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-            -- Load VSCode-format snippets (includes ES7/React)
+            -- Load VSCode-format snippets
             require("luasnip.loaders.from_vscode").lazy_load()
-
-            -- Optional: snippet jump keys (no Tab conflicts)
-            vim.keymap.set({ "i", "s" }, "<C-j>", function()
-                if luasnip.expand_or_jumpable() then luasnip.expand_or_jump() end
-            end, { silent = true })
-            vim.keymap.set({ "i", "s" }, "<C-k>", function()
-                if luasnip.jumpable(-1) then luasnip.jump(-1) end
-            end, { silent = true })
 
             -- LSP capabilities for cmp
             local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -38,17 +31,75 @@ return {
                     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-                    ["<Tab>"] = cmp.mapping.select_next_item(),
-                    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+                    ["<CR>"] = cmp.mapping.confirm({
+                        select = true,
+                        behavior = cmp.ConfirmBehavior.Replace,
+                    }),
+                    ["<Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<S-Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    -- Cmd+L to jump forward in snippet
+                    ["<D-l>"] = cmp.mapping(function(fallback)
+                        if luasnip.jumpable(1) then
+                            luasnip.jump(1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    -- Cmd+H to jump backward in snippet
+                    ["<D-h>"] = cmp.mapping(function(fallback)
+                        if luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
                 }),
                 sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "luasnip" },
+                    { name = "nvim_lsp", priority = 1000 },
+                    { name = "luasnip", priority = 750 },
+                    { name = "path", priority = 500 },
                 }, {
-                    { name = "buffer" },
-                }),
+                        { name = "buffer", keyword_length = 3 },
+                    }),
+                window = {
+                    completion = cmp.config.window.bordered(),
+                    documentation = cmp.config.window.bordered(),
+                },
+                experimental = {
+                    ghost_text = true, -- Show preview
+                },
             })
-        end
+
+            -- Cmdline setup
+            cmp.setup.cmdline("/", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = { { name = "buffer" } },
+            })
+
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = "path" }
+                }, {
+                        { name = "cmdline" }
+                    }),
+            })
+        end,
     },
 }
