@@ -7,8 +7,7 @@ source "$CONFIG_DIR/plugins/icon_map.sh"
 source "$CONFIG_DIR/colors.sh"
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --animate linear 13 \
-    --set $NAME background.drawing=on \
+    sketchybar --set $NAME background.drawing=on \
         background.color=$ACCENT_TRANSPARENT \
         icon.color=$ACCENT \
         label.color=$ACCENT
@@ -36,8 +35,7 @@ else
 fi
 
 if [ "$1" != "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --animate linear 13 \
-    --set $NAME background.drawing=off \
+    sketchybar --set $NAME background.drawing=off \
         icon.color=$GREY \
         label.color=$GREY
 fi
