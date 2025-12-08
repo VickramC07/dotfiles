@@ -69,25 +69,11 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 
-for sid in $(aerospace list-workspaces --monitor focused --empty no); do
+for sid in $(aerospace list-workspaces --monitor focused); do
   # Determine icon based on workspace ID
   space_icon=""
-  case "$sid" in
-  1) space_icon="󰗀" ;;
-  2) space_icon="󰖟" ;;
-  3) space_icon="󰋋" ;;
-  4) space_icon="󰎲" ;;
-  5) space_icon="󰼓" ;;
-  6) space_icon="󰎴" ;;
-  7) space_icon="󰼕" ;;
-  8) space_icon="󰎺" ;;
-  9) space_icon="󰼗" ;;
-  0) space_icon="󰗘" ;;
-  *) space_icon="" ;;
-  esac
 
-  sketchybar --animate linear 20 \
-    --add item space.$sid left \
+  sketchybar --add item space.$sid left \
     --subscribe space.$sid aerospace_workspace_change \
     --set space.$sid \
     background.color=$TRANSPARENT \
@@ -105,6 +91,28 @@ for sid in $(aerospace list-workspaces --monitor focused --empty no); do
     label.y_offset=-1 \
     click_script="aerospace workspace $sid" \
     script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+
+done
+
+for sid in $(aerospace list-workspaces --monitor focused --empty no); do
+  # Determine icon based on workspace ID
+  space_icon=""
+  case "$sid" in
+  1) space_icon="󰗀" ;;
+  2) space_icon="󰖟" ;;
+  3) space_icon="󰋋" ;;
+  4) space_icon="󰎲" ;;
+  5) space_icon="󰼓" ;;
+  6) space_icon="󰎴" ;;
+  7) space_icon="󰼕" ;;
+  8) space_icon="󰎺" ;;
+  9) space_icon="󰼗" ;;
+  0) space_icon="󰗘" ;;
+  *) space_icon="" ;;
+  esac
+
+  sketchybar --set space.$sid \
+    icon="$space_icon" 
 done
 
 # Center

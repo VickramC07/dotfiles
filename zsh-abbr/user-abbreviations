@@ -1,4 +1,6 @@
+abbr "cl"="clear"
 abbr "cs"="cd ~/College/CS180"
+abbr "gbd"="git branch -d"
 abbr "gst"="git status"
 abbr "gsw"="git switch -c"
 abbr "n"="nvim"

@@ -24,4 +24,31 @@ else
   sketchybar --set $NAME label.drawing=off
 fi
 
+for sid in $(aerospace list-workspaces --monitor focused --empty no); do
+  # Determine icon based on workspace ID
+  space_icon=""
+  case "$sid" in
+  1) space_icon="󰗀" ;;
+  2) space_icon="󰖟" ;;
+  3) space_icon="󰋋" ;;
+  4) space_icon="󰎲" ;;
+  5) space_icon="󰼓" ;;
+  6) space_icon="󰎴" ;;
+  7) space_icon="󰼕" ;;
+  8) space_icon="󰎺" ;;
+  9) space_icon="󰼗" ;;
+  0) space_icon="󰗘" ;;
+  *) space_icon="" ;;
+  esac
 
+  sketchybar --set space.$sid \
+    icon="$space_icon" 
+done
+
+for sid in $(aerospace list-workspaces --monitor focused --empty); do
+  # Determine icon based on workspace ID
+  space_icon=""
+
+  sketchybar --set space.$sid \
+    icon="$space_icon" 
+done
