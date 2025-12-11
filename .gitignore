@@ -1,4 +1,11 @@
 .zsh_history
 zsh/.zsh_history
 zsh/.zsh_sessions
-raycast
+raycast/
+envman/
+fish/
+gh/
+kitty/kitty-session.kitty
+kitty/auto_session.sh
+spotify-player/
+uv/
