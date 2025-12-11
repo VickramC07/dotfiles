@@ -16,6 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 -- =========================
 -- Plugins
 -- =========================
+require("plugins.globalmarks")
 local plugins = {}
 
 vim.list_extend(plugins, require("plugins.catppuccin"))
