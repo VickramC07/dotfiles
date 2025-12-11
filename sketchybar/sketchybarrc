@@ -111,8 +111,29 @@ for sid in $(aerospace list-workspaces --monitor focused --empty no); do
   *) space_icon="" ;;
   esac
 
-  sketchybar --set space.$sid \
-    icon="$space_icon" 
+  source "/Users/abhi/.config/sketchybar/plugins/icon_map.sh"
+  icon_string=""
+  tempapps=$(aerospace list-windows --workspace "$sid" 2>/dev/null | awk -F' \\| ' '{print $2}' | sort -u)
+  if [ -n "$tempapps" ]; then
+    for tempapp in $tempapps; do
+      __icon_map "$tempapp"
+      if [ "$icon_result" != ":default:" ]; then
+        icon_string+="$icon_result"
+      fi
+    done
+  fi
+
+  if [ -n "$icon_string" ]; then
+    sketchybar --set space."$sid" \
+      icon="$space_icon" \
+      label="$icon_string" \
+      label.drawing=on
+  else
+    sketchybar --set space."$sid" \
+      icon="$space_icon" \
+      label.drawing=off
+  fi
+
 done
 
 # Center

@@ -18,8 +18,7 @@ if [ -n "$apps" ]; then
 fi
 
 if [ -n "$icon_string" ]; then
-  sketchybar --animate linear 10 \
-      --set $NAME label="$icon_string" label.drawing=on
+  sketchybar --set $NAME label="$icon_string" label.drawing=on
 else
   sketchybar --set $NAME label.drawing=off
 fi
