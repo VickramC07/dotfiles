@@ -51,6 +51,72 @@ return {
                 yazi:toggle()
             end
 
+            -- helper function to find cmd in auto-run
+            function Find_cmd()
+                local util = require("lspconfig.util")
+                local filepath  = vim.fn.expand("%:p")
+                local ext       = vim.fn.expand("%:e")
+                local cmd = "echo 'error filetype not supported'"
+                local filename  = vim.fn.expand("%:t")
+                local filedir   = vim.fn.expand("%:p:h")
+
+                local root = util.root_pattern("pom.xml", "build.gradle", ".git")(filepath)
+                or vim.fn.getcwd()
+
+                -- find relative folder path
+                local relative_dir = filedir:sub(#root + 2) -- removes root + "/"
+
+                -- build path to file
+                local relative_file =
+                (relative_dir ~= "" and relative_dir .. "/" .. filename) or filename
+
+                -- JAVA
+                if ext == "java" then
+                    local classname = vim.fn.expand("%:t:r")
+                    local class_path = relative_dir:gsub("/", ".") .. "." .. classname
+                    cmd = string.format(
+                        "cd '%s' && javac '%s' && java '%s'",
+                        root, relative_file, class_path
+                    )
+
+                -- PYTHON3
+                elseif ext == "py" then
+                    local function find_venv(start_dir)
+                        local candidates = { "venv", ".venv", "env", ".env" }
+                        local dir = start_dir
+
+                        while dir do
+                            for _, name in ipairs(candidates) do
+                                local full = dir .. "/" .. name
+                                if vim.fn.isdirectory(full) == 1 then
+                                    -- must have bin/activate (Unix)
+                                    if vim.fn.filereadable(full .. "/bin/activate") == 1 then
+                                        return full
+                                    end
+                                end
+                            end
+
+                            local parent = vim.fn.fnamemodify(dir, ":h")
+                            if parent == dir then break end
+                            dir = parent
+                        end
+
+                        return nil
+                    end
+                    local venv_path = find_venv(filedir)
+                    local activate_prefix = ""
+                    if venv_path then
+                        activate_prefix = string.format("source '%s/bin/activate' && ", venv_path)
+                    end
+                    cmd = string.format(
+                        "cd '%s' && %spython3 '%s'",
+                        root, activate_prefix, relative_file
+                    )
+                end
+
+                return cmd
+            end
+
             local run = Terminal:new({
                 hidden = true,
                 direction = "float",
@@ -60,30 +126,8 @@ return {
             })
 
             function _RUN_TOGGLE()
-                local util = require("lspconfig.util")
-                local filepath  = vim.fn.expand("%:p")
-                local ext       = vim.fn.expand("%:e")
-                local cmd = "error filetype not supported"
-                local filename  = vim.fn.expand("%:t")
-                local classname = vim.fn.expand("%:t:r")
-                local filedir   = vim.fn.expand("%:p:h")
-
-                local root = util.root_pattern("pom.xml", "build.gradle", ".git")(filepath)
-                or vim.fn.getcwd()
-
-                -- compute relative folder path
-                local relative_dir = filedir:sub(#root + 2) -- removes root + "/"
-
-                -- build path to .java file
-                local relative_file = relative_dir .. "/" .. filename
-
-                -- build package-style class path (replace "/" with ".")
-                local class_path = relative_dir:gsub("/", ".") .. "." .. classname
-
-                if ext == "java" then
-                    -- build the command
-                    cmd = string.format("cd '%s' && javac '%s' && java '%s'", root, relative_file, class_path)
-                end
+                cmd = Find_cmd()
+                cmd = cmd .. " 2> /tmp/run_toggle_logs.txt"
                 run.cmd = cmd
                 run:toggle()
             end
@@ -97,34 +141,13 @@ return {
             })
 
             function _RUN_BUGGY()
-                local util = require("lspconfig.util")
-                local filepath  = vim.fn.expand("%:p")
-                local ext       = vim.fn.expand("%:e")
-                local cmd = "error filetype not supported"
-                local filename  = vim.fn.expand("%:t")
-                local classname = vim.fn.expand("%:t:r")
-                local filedir   = vim.fn.expand("%:p:h")
-
-                local root = util.root_pattern("pom.xml", "build.gradle", ".git")(filepath)
-                or vim.fn.getcwd()
-
-                -- compute relative folder path
-                local relative_dir = filedir:sub(#root + 2) -- removes root + "/"
-
-                -- build path to .java file
-                local relative_file = relative_dir .. "/" .. filename
-
-                -- build package-style class path (replace "/" with ".")
-                local class_path = relative_dir:gsub("/", ".") .. "." .. classname
-
-                if ext == "java" then
-                    -- build the command
-                    cmd = string.format("cd '%s' && javac '%s' && java '%s'", root, relative_file, class_path)
-                end
+                cmd = Find_cmd()
                 buggy:toggle()
                 buggy:send(cmd)
             end
 
+            -- new idea: tm(for terminal multiply/multiplexer whatever)_ and _ can be a number 1-9 to test then a tmk (term. mult. kill)
+            -- for testing multithreaded or whatever programs
             -- Keymap: <leader>t(whatever it opens)
             vim.keymap.set("n", "<leader>tl", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", { desc = "toggle/terminal: lazygit" })
             vim.keymap.set("n", "<leader>tb", "<cmd>lua _BLANK_TOGGLE()<CR>", { desc = "toggle/terminal: blank(cwd)" })
