@@ -69,7 +69,8 @@ sketchybar --default "${default[@]}"
 
 sketchybar --add event aerospace_workspace_change
 
-for sid in $(aerospace list-workspaces --monitor focused); do
+# for sid in $(aerospace list-workspaces --monitor focused); do
+for sid in $(aerospace list-workspaces --all); do
   # Determine icon based on workspace ID
   space_icon=""
 
@@ -94,7 +95,8 @@ for sid in $(aerospace list-workspaces --monitor focused); do
 
 done
 
-for sid in $(aerospace list-workspaces --monitor focused --empty no); do
+# for sid in $(aerospace list-workspaces --monitor focused --empty no); do
+for sid in $(aerospace list-workspaces --all); do
   # Determine icon based on workspace ID
   space_icon=""
   case "$sid" in
@@ -111,28 +113,28 @@ for sid in $(aerospace list-workspaces --monitor focused --empty no); do
   *) space_icon="" ;;
   esac
 
-  source "/Users/abhi/.config/sketchybar/plugins/icon_map.sh"
-  icon_string=""
-  tempapps=$(aerospace list-windows --workspace "$sid" 2>/dev/null | awk -F' \\| ' '{print $2}' | sort -u)
-  if [ -n "$tempapps" ]; then
-    for tempapp in $tempapps; do
-      __icon_map "$tempapp"
-      if [ "$icon_result" != ":default:" ]; then
-        icon_string+="$icon_result"
-      fi
-    done
-  fi
-
-  if [ -n "$icon_string" ]; then
+#   source "/Users/abhi/.config/sketchybar/plugins/icon_map.sh"
+#   icon_string=""
+#   tempapps=$(aerospace list-windows --workspace "$sid" 2>/dev/null | awk -F' \\| ' '{print $2}' | sort -u)
+#   if [ -n "$tempapps" ]; then
+#     for tempapp in $tempapps; do
+#       __icon_map "$tempapp"
+#       if [ "$icon_result" != ":default:" ]; then
+#         icon_string+="$icon_result"
+#       fi
+#     done
+#   fi
+# 
+#   if [ -n "$icon_string" ]; then
+#     sketchybar --set space."$sid" \
+#       icon="$space_icon" \
+#       label="$icon_string" \
+#       label.drawing=on
+#   else
     sketchybar --set space."$sid" \
       icon="$space_icon" \
-      label="$icon_string" \
-      label.drawing=on
-  else
-    sketchybar --set space."$sid" \
-      icon="$space_icon" \
-      label.drawing=off
-  fi
+#       label.drawing=off
+#   fi
 
 done
 

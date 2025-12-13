@@ -7,9 +7,10 @@ after-startup-command = ['exec-and-forget sketchybar']
 exec-on-workspace-change = ['/bin/bash', '-c',
     'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
-on-focus-changed = [
-    "exec-and-forget /bin/bash -lc '~/.config/sketchybar/plugins/aeroicon.sh'"
-]
+
+# on-focus-changed = [
+#     "exec-and-forget /bin/bash -lc '~/.config/sketchybar/plugins/aeroicon.sh'"
+# ]
 
 # Start AeroSpace at login
 start-at-login = true
