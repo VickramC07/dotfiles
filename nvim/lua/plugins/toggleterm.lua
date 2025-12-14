@@ -74,6 +74,7 @@ return {
                 if ext == "java" then
                     local classname = vim.fn.expand("%:t:r")
                     local class_path = relative_dir:gsub("/", ".") .. "." .. classname
+                    class_path = (relative_dir ~= "" and class_path) or classname
                     cmd = string.format(
                         "cd '%s' && javac '%s' && java '%s'",
                         root, relative_file, class_path
@@ -112,6 +113,44 @@ return {
                         "cd '%s' && %spython3 '%s'",
                         root, activate_prefix, relative_file
                     )
+
+                -- Bash
+                elseif ext == "sh" then
+                    cmd = string.format(
+                        "cd '%s' && bash '%s'",
+                        root, relative_file
+                    )
+
+                -- Go
+                elseif ext == "go" then
+                    cmd = string.format(
+                        "cd '%s' && go run '%s'",
+                        root, relative_file
+                    )
+
+                -- JavaScript
+                elseif ext == "js" then
+                    cmd = string.format(
+                        "cd '%s' && node '%s'",
+                        root, relative_file
+                    )
+
+                -- C++
+                elseif ext == "cpp" then
+                    local out = vim.fn.expand("%:t:r")
+                    cmd = string.format(
+                        "cd '%s' && g++ '%s' -std=c++20 -O2 -o '%s' && './%s'",
+                        root, relative_file, out, out
+                    )
+
+                -- C
+                elseif ext == "c" then
+                    local out = vim.fn.expand("%:t:r")
+                    cmd = string.format(
+                        "cd '%s' && gcc '%s' -o '%s' && './%s'",
+                        root, relative_file, out, out
+                    )
+
                 end
 
                 return cmd
