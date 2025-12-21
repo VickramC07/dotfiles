@@ -28,24 +28,29 @@ end
 -- Toggle comment for a single line
 local function toggle_line(line, comment)
     if not line then line = "" end
+
+    -- Skip empty or whitespace-only lines
+    if line:match("^%s*$") then
+        return line
+    end
+
     if comment:find(" ") then
         -- block comments (e.g. <!-- -->, /* */)
-        local open, close = comment:match("^(.-) (.-)$")
-        if not open or not close then return line end
-        if line:match("^%s*" .. vim.pesc(open)) and line:match(vim.pesc(close) .. "%s*$") then
-            -- remove block comment
-            line = line:gsub("^%s*" .. vim.pesc(open) .. "%s?", "")
-            line = line:gsub("%s*" .. vim.pesc(close) .. "%s*$", "")
-            return line
+        local open, close = comment:match("^(.*) (.*)$")
+        if line:match("^%s*" .. vim.pesc(open)) then
+            return line:gsub("^%s*" .. vim.pesc(open) .. "%s?", "")
+                       :gsub("%s*" .. vim.pesc(close) .. "%s*$", "")
         else
             return open .. " " .. line .. " " .. close
         end
     else
         -- line comments
-        if line:match("^%s*" .. vim.pesc(comment)) then
-            return line:gsub("^%s*" .. vim.pesc(comment) .. "%s?", "")
+        local indent = line:match("^(%s*)") or ""
+        local content = line:sub(#indent + 1)
+        if string.sub(content, 1, #comment) == comment then
+            return indent .. string.sub(content, #comment + 2)
         else
-            return comment .. " " .. line
+            return indent .. comment .. " " .. content
         end
     end
 end
@@ -81,9 +86,12 @@ function M.toggle()
     end
 end
 
+
 -- Keymap at the bottom
+
 vim.keymap.set({ "n", "v" }, "<leader>cc", function()
     M.toggle()
 end, { desc = "Toggle comment" })
 
 return M
+
