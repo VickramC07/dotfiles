@@ -77,4 +77,4 @@ local function open_marks_window()
 end
 
 -- Keybind to open window
-vim.keymap.set("n", "<leader>gm", open_marks_window)
+vim.keymap.set("n", "<leader>gm", open_marks_window, { desc = "show global marks" })
