@@ -20,15 +20,15 @@ launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist > /
 
 # Setting up the general bar appearance of the bar
 bar=(
-  height=39
+  height=35
   color=$BAR_COLOR
-  shadow=on
+  shadow=off
   position=top
   sticky=on
   padding_right=10
   padding_left=10
   corner_radius=9
-  y_offset=10
+  y_offset=4
   margin=10
   blur_radius=20
   notch_width=10
@@ -63,7 +63,6 @@ sketchybar --default "${defaults[@]}"
 
 # Left
 source "$ITEM_DIR/apple.sh"
-source "$ITEM_DIR/spotify.sh"
 
 sketchybar --default "${default[@]}"
 
